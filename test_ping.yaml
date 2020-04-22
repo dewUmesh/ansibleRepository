@@ -1,0 +1,19 @@
+#  First test template
+#  Perfrom two actions ping and file create
+
+---
+    - name: Ansible playbook to test ping
+      hosts: localhost
+      gather_facts: false
+      tasks:
+        # Run ping command
+        - name: Action run ping
+          action: ping
+
+        # Create directory
+        - name: Action create directory
+          shell:
+            cmd: touch a.log
+            cmd: rm -rf a.log
+
+
