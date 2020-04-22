@@ -10,10 +10,9 @@
         - name: Action run ping
           action: ping
 
-        # Create directory
+        # Create file
         - name: Action create directory
           shell:
             cmd: touch a.log
-            cmd: rm -rf a.log
 
 
