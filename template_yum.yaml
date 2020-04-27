@@ -1,0 +1,16 @@
+# Install httpd service using yum
+# Make sure it should be latest 
+# start the service
+---
+    - name: Playbook for unix component installation
+      hosts: localhost
+      gather_facts: false
+      tasks:
+        - name: Install httpd
+          yum:
+            name: httpd
+            state: latest
+        - name: start httpd service
+          service:
+            name: httpd
+            state: restarted
