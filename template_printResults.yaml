@@ -1,0 +1,12 @@
+# Template to print the command output on screen
+---
+    - name: Pring command output
+      hosts: localhost
+      gather_facts: false
+      tasks:
+        - name: List files and directories
+          command: ls -lrt
+          register: result
+        - name: print result
+          debug:
+            var: result.stdout_lines
