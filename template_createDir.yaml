@@ -1,0 +1,19 @@
+---
+    - name: test system commands to create file and directory
+      hosts: localhost
+      gather_facts: false
+      tasks:
+        # command will create file if does not exist
+        - name: create directory
+          file:
+            path: /root/cache
+            state: directory
+        - name: create file in above directory
+          file:
+            path: /root/cache/test.log
+            state: touch
+        - name: write data to file
+          shell:
+            cmd: echo "hello 2" >> /root/cache/test.log
+       
+    

@@ -6,11 +6,15 @@
       hosts: localhost
       gather_facts: false
       tasks:
+
         - name: Install httpd
           yum:
             name: httpd
-            state: latest
-        - name: start httpd service
+            state: present
+          notify: httpd-service-handler
+      
+      handlers:
+        - name: httpd-service-handler
           service:
             name: httpd
-            state: restarted
+            state: started
