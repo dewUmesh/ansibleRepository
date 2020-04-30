@@ -7,6 +7,22 @@
         - name: List files and directories
           command: ls -lrt
           register: result
-        - name: print result
+        - name: print full result
+          debug:
+            var: result
+        - name: print only result
           debug:
             var: result.stdout_lines
+        - name: create directory
+          command: echo {{item}}
+          register: result1
+        # when: item.changed
+        # notify: some_handler
+          loop:
+              - one
+              - two
+          notify: some_handler
+      handlers:
+      - name: some_handler
+        debug:
+          var: result1

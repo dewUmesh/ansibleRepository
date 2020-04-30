@@ -1,0 +1,16 @@
+---
+- name: Example notify in side loop
+  hosts: controler
+  become: ture
+  tasks:
+    - name: Run echo
+      command: echo {{item}}
+      notify: status_handler
+      with_items:
+        - wget
+        - httpd
+        - epel-release
+  handlers:
+    - name: status_handler
+      debug: msg="PASS"
+

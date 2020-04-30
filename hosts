@@ -1,1 +1,2 @@
+[controler]
 localhost ansible_connection=local

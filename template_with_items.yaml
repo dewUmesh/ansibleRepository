@@ -1,0 +1,25 @@
+---
+- name: Implementing with_items loop
+  hosts: controler
+  become: ture
+  tasks:
+    - name: Utils tools Installation
+      yum: name={{item}} state=present
+      with_items:
+        - wget
+        - httpd
+        - epel-release
+      notify: nginx-install
+
+  handlers:
+    - name: nginx-install
+      yum: name=nginx state=present
+      notify: start-services
+  
+      handlers:
+        - name: start-services
+          service: name={{item}} state=present enable=yes
+          with_items:
+            - httpd
+            - nginx
+
