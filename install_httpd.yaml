@@ -1,0 +1,17 @@
+---
+    - name: install and configure httpd
+      hosts: localhost
+      tasks:
+        - name: Install httpd
+          yum: name=httpd state=present
+        - name: Configure httpd
+          shell: echo "<p> HTTPD working </p>" > /var/www/html/index.html
+        - name: Start httpd service
+          service: name=httpd state=started
+        - name: Enable httpd service
+          service: name=httpd enabled=yes
+        #   shell: systemctl enable httpd
+        #   register: result
+        # - name: print results
+        #   debug:
+        #     var: result
