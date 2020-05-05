@@ -1,0 +1,13 @@
+- hosts: localhost
+  become: true
+  
+  vars:
+    # jenkins_hostname: jenkins.example.com
+    # jenkins_hostname: localhost
+    # java_packages:
+      # - openjdk-8-jdk
+      # - java-1.8.0-openjdk
+
+  roles:
+    # - role: jInstall.java
+    - role: geerlingguy.jenkins

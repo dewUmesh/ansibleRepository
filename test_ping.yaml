@@ -1,0 +1,47 @@
+#  First test template
+#  Perfrom two actions ping and file create
+
+---
+    - name: Ansible playbook to test ping
+      hosts: localhost
+      # gather_facts: false
+      tasks:
+        # Run ping command
+        # - name: Action run ping
+        #   action: ping
+
+        # # Create file
+        # - name: Action create directory
+        #   shell:
+        #     cmd: touch a.log
+        - name: run yum
+          ping:
+          register: result
+        - name: display results
+          debug:
+            var: result
+          when: result.ping is not match('po*')
+           # data: crash
+        - name: Check if java is installed
+          become_user: yes 
+          shell: java -version 2>&1 | grep version | awk '{print $3}' | sed 's/"//g'
+          register: java_version
+          
+         
+        
+          # ignore_errors: True
+          # notify:
+          #   - testhandler
+          # when: java_result is success
+
+        # - debug:
+        #     msg: "Failed - Java is not installed"
+        #   when: java_result is failed
+
+        - debug:
+            # msg: "Success - Java is installed"
+            var: java_version
+          when:  java_version.stdout is not match("1.8*")
+      # handlers:
+      #   - name:  testhandler
+      #     ping:

@@ -1,0 +1,40 @@
+---
+
+- name: Check if java is installed
+  become: yes 
+  shell: java -version 2>&1 | grep version | awk '{print $3}' | sed 's/"//g'
+  register: java_result
+  # notify: 
+  #   - Install-Java
+  # when: java_result.stdout is not match("1.8*")
+
+- name: Current Java Version
+  debug:
+    var: java_result.stdout
+- name: Required java version
+  debug:
+    msg: "required version [ {{ java_version_required }} ]"
+  # when: java_result.stdout is not match(java_version_required)
+
+# - name: Install Java
+#   notify: Install-Java
+#   when: java_result.stdout is not match("1.8*")
+
+- name: Install-Java
+  become: yes
+  package:
+   name: "{{ java_packages }}"
+   # name: "java-1.8.0-openjdk"
+   state: present
+  when: java_result.stdout is not match(java_version_required)
+
+
+ 
+    
+    
+    
+    
+    
+   
+   
+

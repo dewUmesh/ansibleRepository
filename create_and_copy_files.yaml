@@ -1,0 +1,16 @@
+---
+- name: test handler
+  hosts: controler
+  tasks:
+    - name: create source directory
+      file: name=/root/cache1 state=directory
+    - name: create file 
+      shell: echo "hello" >> /root/cache1/test.log
+    - name: create destination directory
+      file: name=/root/cache2 state=directory
+    - name: copy file from source to destination
+      copy: src=/root/cache1/test.log dest=/root/cache2/ mode=0755
+
+
+      # task :
+        # how copy module is checking for change in file content ???
