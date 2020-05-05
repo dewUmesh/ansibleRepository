@@ -1,7 +1,0 @@
-# Template to print the command output on screen
----
-    - name: Pring command output
-      hosts: localhost
-      gather_facts: false
-      roles:
-        - print

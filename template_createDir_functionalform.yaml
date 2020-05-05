@@ -1,7 +1,0 @@
----
-  - name: create directory playbook
-    hosts: localhost
-    gather_facts: false
-    tasks:
-      - name: create directory task
-        file: path=/root/cache state=directory
