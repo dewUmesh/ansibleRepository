@@ -1,21 +1,19 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: A sample template
 Resources:
-  MyEC2Instance:
-    Type: "AWS::EC2::Instance"
+  EC2Instance:
+    Type: AWS::EC2::Instance
     Properties:
-      ImageId: "ami-003cb5bde3420db79"
       InstanceType: t2.micro
       KeyName: key
-      SubnetId: subnet-09b4cdff5d6d95614
-      # SecurityGroups: [!Ref InstanceSecurityGroup]
-      SecurityGroupIds: [!Ref InstanceSecurityGroup]
+      ImageId: ami-003cb5bde3420db79
+      SecurityGroups:
+        - !Ref "InstanceSecurityGroup"
 
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Enable SSH access via port 22
-      VpcId: vpc-01eb23096fae50cbb
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
