@@ -1,0 +1,37 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Master stack: PathToMasterStackFile"
+Parameters:
+  GetEc2Image:
+    Description: "Get default image"
+    Type: String
+    Default: ami-003cb5bde3420db79
+
+Mappings:
+  GetImage:
+    amazon:
+      imageID: ami-0323c3dd2da7fb37d
+    centos:
+      imageID: ami-003cb5bde3420db79
+
+Resources:
+  myEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      KeyName: key
+      # ImageId: !Ref GetEc2Image
+      ImageId: !FindInMap [GetImage, amazon, imageID]
+      InstanceType: t2.micro
+      Monitoring: false
+      SubnetId: subnet-09b4cdff5d6d95614
+      SecurityGroupIds:
+        - !ImportValue SecurityGroupSSHandHTTP
+      UserData: !Base64 |
+        #!/bin/bash -ex
+         yum -y install httpd
+        systemctl start httpd
+        systemctl enable httpd
+        echo "<p> User Data </p>" > /var/www/html/index.html
+      Tags:
+        - Key: Name
+          Value: Ec2WithUserData

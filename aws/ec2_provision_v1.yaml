@@ -1,3 +1,9 @@
+# 1. setup ec2
+# 2. setup security groups
+# 3. set vpc with parameters
+# 4. set conditions
+# 5. set output
+
 AWSTemplateFormatVersion: "2010-09-09"
 Description: A sample template
 Resources:

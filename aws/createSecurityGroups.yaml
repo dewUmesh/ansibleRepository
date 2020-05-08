@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "stack: create Security groups"
+
+Parameters:
+  ParameterGetVPC:
+    Description: "Enter if there is any specific vpc"
+    Type: String
+    Default: vpc-01eb23096fae50cbb
+
+# Mappings:
+Resources:
+  SecurityGroupSSHandHTTP:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: testSecurityGroup
+      GroupDescription: "This is custom security group"
+      VpcId: !Ref ParameterGetVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      # SecurityGroupEgress:
+      #   - IpProtocol: tcp
+      #     FromPort: 22
+      #     ToPort: 22
+      #     CidrIp: 0.0.0.0/0
+      #   - IpProtocol: tcp
+      #     FromPort: 80
+      #     ToPort: 80
+      #     CidrIp: 0.0.0.0/0
+
+      Tags:
+        - Key: Name
+          Value: customSecutiryGroup
+
+Outputs:
+  CustomSecurityGroup:
+    Description: Information about the custom security group
+    Value: !Ref SecurityGroupSSHandHTTP
+    Export:
+      Name: SecurityGroupSSHandHTTP
