@@ -17,10 +17,36 @@ Mappings:
 Resources:
   myEC2Instance:
     Type: AWS::EC2::Instance
+    Metadata:
+      # Type: AWS::CloudFormation::Init  # this syntax not working
+      AWS::CloudFormation::Init:
+        configSets:
+          All:
+            - config
+        config:
+          packages:
+            yum:
+              httpd: []
+          files:
+            /var/www/html/index.html:
+              content: !Join
+                - |+
+                - - >-
+                    <h1>Congratulations, you have successfully launched the AWS
+                    CloudFormation sample.</h1>
+              mode: "000644"
+              owner: root
+              group: root
+          services:
+            sysvinit:
+              httpd:
+                enabled: "true"
+                ensureRunning: "true"
     Properties:
       KeyName: key
       # ImageId: !Ref GetEc2Image
-      ImageId: !FindInMap [GetImage, amazon, imageID]
+      #ImageId: !FindInMap [GetImage, amazon, imageID]
+      ImageId: ami-0323c3dd2da7fb37d
       InstanceType: t2.micro
       Monitoring: false
       SubnetId: subnet-09b4cdff5d6d95614
@@ -29,12 +55,12 @@ Resources:
       Tags:
         - Key: Name
           Value: Ec2WithUserData
-
       UserData: !Base64
         "Fn::Join":
           - ""
           - - |
               #!/bin/bash -xe
+            - |
               yum update -y aws-cfn-bootstrap
             - |
               # Install the files and packages from the metadata
@@ -42,45 +68,17 @@ Resources:
             - "         --stack "
             - !Ref "AWS::StackName"
             - "         --resource myEC2Instance "
+            - "         --configsets All "
             - |+
 
             - |
-              # Signal the status
+              # Signal the status from cfn-init
             - "/opt/aws/bin/cfn-signal -e $? "
             - "         --stack "
             - !Ref "AWS::StackName"
-            - "  --resource MyInstance"
+            - "         --resource myEC2Instance "
             - |+
 
     CreationPolicy:
       ResourceSignal:
-        Timeout: PT2M
-        # Fn::Base64: !Sub |
-        #   #!/bin/bash -ex
-        #   yum update -y aws-cfn-bootstrap
-        #   /opt/aws/bin/cfn-init --stack $    AWS::StackId} --resource myEC2Instance
-        # Fn::Base64: !Sub |
-        #   #!/bin/bash -ex
-        #   yum update -y aws-cfn-bootstrap
-        #   /opt/aws/bin/cfn-init --stack ${AWS::StackId} --resource myEC2Instance
-
-    Metadata:
-      AWS::CloudFormation::Init:
-        config:
-          packages:
-            yum:
-              httpd: []
-          files:
-            /var/www/html/index.html:
-              content: |
-                <h1> Inside index : using cloudFormation init </h1>
-          commands:
-            test1:
-              command: systemctl status httpd >~/test.txt
-            test2:
-              command: systemctl restart httpd
-          services:
-            sysvinit:
-              httpd:
-                enabled: "true"
-                ensureRunning: "true"
+        Timeout: PT5M
