@@ -12,7 +12,7 @@ Resources:
   SecurityGroupSSHandHTTP:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: testSecurityGroup
+      GroupName: SecurityGroupSSHandHTTP
       GroupDescription: "This is custom security group"
       VpcId: !Ref ParameterGetVPC
       SecurityGroupIngress:
@@ -36,11 +36,52 @@ Resources:
 
       Tags:
         - Key: Name
-          Value: customSecutiryGroup
+          Value: SecurityGroupSSHandHTTP
 
+  SecurityGroupSSH:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: SecurityGroupSSH
+      GroupDescription: "This is custom security group"
+      VpcId: !Ref ParameterGetVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: SecurityGroupSSH
+
+  SecurityGroupHTTP:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: SecurityGroupHTTP
+      GroupDescription: "This is custom security group"
+      VpcId: !Ref ParameterGetVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: SecurityGroupHTTP
 Outputs:
-  CustomSecurityGroup:
+  SecurityGroupSSHandHTTP:
     Description: Information about the custom security group
     Value: !Ref SecurityGroupSSHandHTTP
     Export:
       Name: SecurityGroupSSHandHTTP
+
+  SecurityGroupSSH:
+    Description: Information about the custom security group
+    Value: !Ref SecurityGroupSSH
+    Export:
+      Name: SecurityGroupSSH
+
+  SecurityGroupHTTP:
+    Description: Information about the custom security group
+    Value: !Ref SecurityGroupHTTP
+    Export:
+      Name: SecurityGroupHTTP
