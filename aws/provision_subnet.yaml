@@ -1,0 +1,76 @@
+# As a user i want to create a public subnet
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Master stack: PathToMasterStackFile"
+
+Parameters:
+  GetZoneId1:
+    Description: Enter Subnet zone
+    Type: String
+    Default: us-east-1a
+  GetZoneId2:
+    Description: Enter Subnet zone
+    Type: String
+    Default: us-east-1b
+  GetVpcId:
+    Description: Enter vpc id
+    Type: String
+    Default: vpc-01eb23096fae50cbb
+  PublicSubnetCider1:
+    Description: default public subnet cider
+    Type: String
+    Default: 172.16.2.0/25
+  PublicSubnetCider2:
+    Description: default public subnet cider
+    Type: String
+    Default: 172.16.3.0/25
+  GetRouteTable:
+    Description: Default route table
+    Type: String
+    Default: rtb-048909981fec2e99a
+
+Resources:
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref GetZoneId1
+      VpcId: !Ref GetVpcId
+      CidrBlock: !Ref PublicSubnetCider1
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: PublicSubnet1
+  PublicSubnet1ToRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet1
+      RouteTableId: !Ref GetRouteTable
+
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref GetZoneId2
+      VpcId: !Ref GetVpcId
+      CidrBlock: !Ref PublicSubnetCider2
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: PublicSubnet2
+  PublicSubnet2ToRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet2
+      RouteTableId: !Ref GetRouteTable
+
+Outputs:
+  PublicSubnet1:
+    Description: Set the public subnet as outside paramater
+    Value: !Ref PublicSubnet1
+    Export:
+      Name: PublicSubnet1
+
+  PublicSubnet2:
+    Description: Set the public subnet as outside paramater
+    Value: !Ref PublicSubnet2
+    Export:
+      Name: PublicSubnet2
