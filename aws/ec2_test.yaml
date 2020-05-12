@@ -1,0 +1,183 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Master stack: PathToMasterStackFile"
+Parameters:
+  GetEc2Image:
+    Description: "Get default image"
+    Type: String
+    Default: ami-0323c3dd2da7fb37d
+
+  GetSubnetId:
+    Type: String
+    Default: subnet-09b4cdff5d6d95614
+
+Mappings:
+  GetImage:
+    amazon:
+      imageID: ami-0323c3dd2da7fb37d
+    centos:
+      imageID: ami-003cb5bde3420db79
+
+Resources:
+  myEC2Instance1:
+    Type: AWS::EC2::Instance
+    Metadata:
+      # Type: AWS::CloudFormation::Init  # this syntax not working
+      AWS::CloudFormation::Init:
+        # configSets:
+        #   All:
+        #     - config
+        config:
+          packages:
+            yum:
+              httpd: []
+          # files:
+          #   /var/www/html/index.html:
+          #     content: !Join
+          #       - |+
+          #       - - >-
+          #           <h1>Congratulations, you have successfully launched the AWS
+          #           CloudFormation sample.</h1>
+          #     mode: "000644"
+          #     owner: root
+          #     group: root
+          commands:
+            test:
+              command: "echo My Public IP is : `${MAGIC}` >> /var/www/html/index.html"
+              env:
+                MAGIC: "curl http://169.254.169.254/latest/meta-data/public-ipv4"
+              cwd: "~"
+              test: "test ! -e /var/www/html/index.html"
+              ignoreErrors: "false"
+          services:
+            sysvinit:
+              httpd:
+                enabled: "true"
+                ensureRunning: "true"
+    Properties:
+      KeyName: key
+      # ImageId: !Ref GetEc2Image
+      #ImageId: !FindInMap [GetImage, amazon, imageID]
+      ImageId: !Ref GetEc2Image
+      InstanceType: t2.micro
+      Monitoring: false
+      SubnetId: !ImportValue PublicSubnet1
+      SecurityGroupIds:
+        - !ImportValue SecurityGroupSSHandHTTP
+      Tags:
+        - Key: Name
+          Value: Ec2WithUserData1
+      UserData: !Base64
+        "Fn::Join":
+          - ""
+          - - |
+              #!/bin/bash -xe
+            - |
+              yum update -y aws-cfn-bootstrap
+            - |
+              # Install the files and packages from the metadata
+            - "/opt/aws/bin/cfn-init -v "
+            - "         --stack "
+            - !Ref "AWS::StackName"
+            - "         --resource myEC2Instance1 "
+            # - "         --configsets All "
+            - |+
+
+            - |
+              # Signal the status from cfn-init
+            - "/opt/aws/bin/cfn-signal -e $? "
+            - "         --stack "
+            - !Ref "AWS::StackName"
+            - "         --resource myEC2Instance1 "
+            - |+
+
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT2M
+
+  myEC2Instance2:
+    Type: AWS::EC2::Instance
+    Metadata:
+      # Type: AWS::CloudFormation::Init  # this syntax not working
+      AWS::CloudFormation::Init:
+        # configSets:
+        #   All:
+        #     - config
+        config:
+          packages:
+            yum:
+              httpd: []
+          # files:
+          #   /var/www/html/index.html:
+          #     content: !Join
+          #       - |+
+          #       - - >-
+          #           <h1>Congratulations, you have successfully launched the AWS
+          #           CloudFormation sample.</h1>
+          #     mode: "000644"
+          #     owner: root
+          #     group: root
+          commands:
+            test:
+              command: "echo My Public IP is : `${MAGIC}` >> /var/www/html/index.html"
+              env:
+                MAGIC: "curl http://169.254.169.254/latest/meta-data/public-ipv4"
+              cwd: "~"
+              test: "test ! -e /var/www/html/index.html"
+              ignoreErrors: "false"
+          services:
+            sysvinit:
+              httpd:
+                enabled: "true"
+                ensureRunning: "true"
+    Properties:
+      KeyName: key
+      # ImageId: !Ref GetEc2Image
+      #ImageId: !FindInMap [GetImage, amazon, imageID]
+      ImageId: !Ref GetEc2Image
+      InstanceType: t2.micro
+      Monitoring: false
+      SubnetId: !ImportValue PublicSubnet2
+      SecurityGroupIds:
+        - !ImportValue SecurityGroupSSHandHTTP
+      Tags:
+        - Key: Name
+          Value: Ec2WithUserData2
+      UserData: !Base64
+        "Fn::Join":
+          - ""
+          - - |
+              #!/bin/bash -xe
+            - |
+              yum update -y aws-cfn-bootstrap
+            - |
+              # Install the files and packages from the metadata
+            - "/opt/aws/bin/cfn-init -v "
+            - "         --stack "
+            - !Ref "AWS::StackName"
+            - "         --resource myEC2Instance2 "
+            # - "         --configsets All "
+            - |+
+
+            - |
+              # Signal the status from cfn-init
+            - "/opt/aws/bin/cfn-signal -e $? "
+            - "         --stack "
+            - !Ref "AWS::StackName"
+            - "         --resource myEC2Instance2 "
+            - |+
+
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT2M
+Outputs:
+  myEC2Instance1:
+    Description: Instance id exported
+    Value: !Ref myEC2Instance1
+    Export:
+      Name: myEC2Instance1
+  myEC2Instance2:
+    Description: Instance id exported
+    Value: !Ref myEC2Instance2
+    Export:
+      Name: myEC2Instance2
