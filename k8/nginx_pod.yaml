@@ -1,13 +1,11 @@
----
-- name: "nginx pod yaml"
-  apiVersion: v1
-  kind: Pod
-  metadata:
-    name: nginx-pod
-    labels:
-      name: nginx
-      app: nginx
-  spec:
-    containers:
-      - name: nginx-container
-        image: nginx
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+  labels:
+    app: nginx
+    tier: dev
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx
