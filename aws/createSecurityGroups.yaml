@@ -3,9 +3,10 @@ Description: "stack: create Security groups"
 
 Parameters:
   ParameterGetVPC:
-    Description: "Enter if there is any specific vpc"
-    Type: String
-    Default: vpc-01eb23096fae50cbb
+    Type: "AWS::EC2::VPC::Id"
+    Description: VpcId of your existing Virtual Private Cloud (VPC)
+    Default: None
+      
 
 # Mappings:
 Resources:
