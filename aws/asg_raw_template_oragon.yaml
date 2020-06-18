@@ -265,6 +265,7 @@ Resources:
     Properties:
       Name: stagingALB-umesh
       Subnets: !Ref Subnets
+      SecurityGroups: [!ImportValue SecurityGroupHTTP]
       # Subnets:
       #   - !ImportValue stagingVPCPublicSubnet1
       #   - !ImportValue stagingVPCPublicSubnet2
