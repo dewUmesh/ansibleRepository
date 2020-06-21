@@ -1,0 +1,25 @@
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: pod3
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: alpine
+    matchExpressions:
+      - { key: tier, operator: In, values: [frontend] }
+  template:
+    metadata:
+      name: podWithLocalImageReplicaSet
+      labels:
+        app: alpine
+        tier: frontend
+    spec:
+      containers:
+        - name: pod3
+          image: docker-registry:5000/root/alpine-local:v1.0
+          imagePullPolicy: IfNotPresent
+          command:
+            - /sbin/init
