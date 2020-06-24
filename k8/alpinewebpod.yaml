@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alpineweb
+  labels:
+    app: webserver
+spec:
+  containers:
+    - name: alpinecontainer
+      image: docker-registry:5000/root/localalpine:v1.0
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 8080
