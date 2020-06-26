@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: load-balancer-example
+  name: hello-world
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: load-balancer-example
+  template:
+    metadata:
+      labels:
+        app: load-balancer-example
+    spec:
+      containers:
+        - image: docker-registry:5000/root/localalpine:v1.0
+          name: hello-world
+          ports:
+            - containerPort: 8080
