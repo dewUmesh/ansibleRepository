@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: podwithhostdirmount
+  labels:
+    env: dev
+    tier: backend
+spec:
+  containers:
+    - name: alpine
+      image: docker-registry:5000/root/localalpine:v1.0
+      volumeMounts:
+        - mountPath: /k8tmp
+          name: localhostdir
+  volumes:
+    - name: localhostdir
+      hostPath:
+        path: /root/k8temp
